@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../calendar/calendar_loadmore.dart';
 import '../calendar/drag_and_drop_calendar.dart';
 import '../calendar/getting_started.dart';
 import '../calendar/shift_scheduler.dart';
@@ -16,7 +17,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: DefaultTabController(
-        length: 3,
+        length: 4,
         child: Scaffold(
           appBar: AppBar(
             title: Text('calendar widget'),
@@ -31,6 +32,9 @@ class _HomePageState extends State<HomePage> {
                 Tab(
                   text: 'Shift and Appointments',
                 ),
+                Tab(
+                  text: 'load more',
+                ),
               ],
             ),
           ),
@@ -39,6 +43,7 @@ class _HomePageState extends State<HomePage> {
               GettingStartedCalendar(const ValueKey('key0')),
               DragAndDropCalendar(const ValueKey('key1')),
               ShiftScheduler(const ValueKey('key2')),
+              LoadMoreCalendar(const ValueKey('key3')),
             ],
           ),
         ),

@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:intl/intl.dart';
 
 ///calendar import
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -15,7 +16,6 @@ import 'appointment_editor.dart';
 class ShiftScheduler extends SampleView {
   /// Creates calendar of shift scheduler
   const ShiftScheduler(Key key) : super(key: key);
-
   @override
   _ShiftSchedulerState createState() => _ShiftSchedulerState();
 }
@@ -36,17 +36,18 @@ class _ShiftSchedulerState extends SampleViewState {
   final CalendarController _calendarController = CalendarController();
 
   final List<CalendarView> _allowedViews = <CalendarView>[
+    CalendarView.day,
+    CalendarView.week,
     CalendarView.timelineDay,
     CalendarView.timelineWeek,
     CalendarView.timelineWorkWeek,
-    CalendarView.timelineMonth
+    CalendarView.timelineMonth,
   ];
 
   late List<DateTime> _visibleDates;
 
   bool _isAllDay = false;
   String _subject = '';
-  int _selectedColorIndex = 0;
 
   Appointment? _selectedAppointment;
 
@@ -115,7 +116,6 @@ class _ShiftSchedulerState extends SampleViewState {
               if (_selectedAppointment == null) {
                 _isAllDay = calendarTapDetails.targetElement ==
                     CalendarElement.allDayPanel;
-                _selectedColorIndex = 0;
                 _subject = '';
                 final DateTime date = calendarTapDetails.date!;
 
@@ -123,7 +123,7 @@ class _ShiftSchedulerState extends SampleViewState {
                   startTime: date,
                   endTime: date.add(const Duration(hours: 1)),
                   resourceIds: <Object>[calendarTapDetails.resource!.id],
-                  color: _colorCollection[_selectedColorIndex],
+                  color: Colors.white,
                   isAllDay: _isAllDay,
                   subject: _subject == '' ? '(No title)' : _subject,
                 );
@@ -247,21 +247,21 @@ class _ShiftSchedulerState extends SampleViewState {
     _nameCollection.add('Addison');
     _nameCollection.add('Ruby');
 
-    _userImages.add('images/People_Circle5.png');
-    _userImages.add('images/People_Circle8.png');
-    _userImages.add('images/People_Circle18.png');
-    _userImages.add('images/People_Circle23.png');
-    _userImages.add('images/People_Circle25.png');
-    _userImages.add('images/People_Circle20.png');
-    _userImages.add('images/People_Circle13.png');
-    _userImages.add('images/People_Circle11.png');
-    _userImages.add('images/People_Circle27.png');
-    _userImages.add('images/People_Circle26.png');
-    _userImages.add('images/People_Circle24.png');
-    _userImages.add('images/People_Circle15.png');
+    _userImages.add('assets/images/People_Circle5.png');
+    _userImages.add('assets/images/People_Circle8.png');
+    _userImages.add('assets/images/People_Circle18.png');
+    _userImages.add('assets/images/People_Circle23.png');
+    _userImages.add('assets/images/People_Circle25.png');
+    _userImages.add('assets/images/People_Circle20.png');
+    _userImages.add('assets/images/People_Circle13.png');
+    _userImages.add('assets/images/People_Circle11.png');
+    _userImages.add('assets/images/People_Circle27.png');
+    _userImages.add('assets/images/People_Circle26.png');
+    _userImages.add('assets/images/People_Circle24.png');
+    _userImages.add('assets/images/People_Circle15.png');
   }
 
-  /// Creates the required appointment details as a list.
+  // Create the required appointment details as a list.
   void _addAppointmentDetails() {
     _subjectCollection.add('General Meeting');
     _subjectCollection.add('Plan Execution');
@@ -274,7 +274,7 @@ class _ShiftSchedulerState extends SampleViewState {
     _subjectCollection.add('Release updates');
     _subjectCollection.add('Performance Check');
 
-    _colorCollection.add(const Color(0xFF0F8644));
+    // _colorCollection.add(const Color(0xFF0F8644));
     _colorCollection.add(const Color(0xFF8B1FA9));
     _colorCollection.add(const Color(0xFFD20100));
     _colorCollection.add(const Color(0xFFFC571D));
@@ -282,7 +282,10 @@ class _ShiftSchedulerState extends SampleViewState {
     _colorCollection.add(const Color(0xFF36B37B));
     _colorCollection.add(const Color(0xFF3D4FB5));
     _colorCollection.add(const Color(0xFFE47C73));
-    _colorCollection.add(const Color(0xFF636363));
+    // _colorCollection.add(const Color(0xFF636363));
+    _colorCollection.add(Colors.amberAccent);
+    _colorCollection.add(Colors.blueAccent);
+    _colorCollection.add(Colors.greenAccent);
 
     _colorNames.add('Green');
     _colorNames.add('Purple');
@@ -407,7 +410,7 @@ class _ShiftSchedulerState extends SampleViewState {
     for (int i = 0; i < _nameCollection.length; i++) {
       _employeeCollection.add(CalendarResource(
           displayName: _nameCollection[i],
-          id: '000' + i.toString(),
+          id: '000$i',
           color: Color.fromRGBO(
               random.nextInt(255), random.nextInt(255), random.nextInt(255), 1),
           image:
@@ -477,7 +480,7 @@ class _ShiftSchedulerState extends SampleViewState {
               startTime: shiftStartTime,
               endTime: shiftStartTime.add(const Duration(hours: 1)),
               subject: _subjectCollection[random.nextInt(8)],
-              color: _colorCollection[random.nextInt(8)],
+              color: Colors.grey[100] as Color,
               startTimeZone: '',
               endTimeZone: '',
               resourceIds: employeeIds));
@@ -517,15 +520,76 @@ class _ShiftSchedulerState extends SampleViewState {
       dynamic calendarTapCallback,
       dynamic viewChangedCallback]) {
     return SfCalendar(
+      appointmentBuilder: appointmentBuilder,
+      viewHeaderStyle: ViewHeaderStyle(
+          backgroundColor: Colors.grey.withOpacity(0.2),
+          dayTextStyle: const TextStyle(
+              color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500)),
       showDatePickerButton: true,
       controller: _calendarController,
       allowedViews: _allowedViews,
       timeRegionBuilder: _getSpecialRegionWidget,
+      resourceViewSettings: const ResourceViewSettings(),
       specialRegions: _specialTimeRegions,
-      showNavigationArrow: model.isWebFullView,
+      showNavigationArrow: true,
       dataSource: calendarDataSource,
       onViewChanged: viewChangedCallback,
-      onTap: calendarTapCallback,
+      // onTap: calendarTapCallback,
+      timeSlotViewSettings: const TimeSlotViewSettings(
+          timeInterval: Duration(hours: 1),
+          timeIntervalHeight: 70,
+          timeIntervalWidth: 120,
+          minimumAppointmentDuration: Duration(hours: 1),
+          startHour: 9,
+          endHour: 18,
+          timeFormat: 'hh a',
+          timeTextStyle: TextStyle(
+              color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500)),
+      dragAndDropSettings: const DragAndDropSettings(),
+      allowDragAndDrop: true,
+    );
+  }
+
+  //custom appointment card
+  Widget appointmentBuilder(BuildContext context,
+      CalendarAppointmentDetails calendarAppointmentDetails) {
+    final Appointment appointment =
+        calendarAppointmentDetails.appointments.first;
+    return SingleChildScrollView(
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border(
+              top: BorderSide(
+                  color: _colorCollection[Random().nextInt(9)], width: 3)),
+          color: _colorCollection[Random().nextInt(9)],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: calendarAppointmentDetails.bounds.width,
+              height: calendarAppointmentDetails.bounds.height / 2,
+              color: appointment.color,
+              child: Text(
+                '${DateFormat('hh:mm a').format(appointment.startTime)}-${DateFormat('hh:mm a').format(appointment.endTime)}\n${appointment.subject}',
+                textAlign: TextAlign.start,
+                style: const TextStyle(fontSize: 10),
+              ),
+            ),
+            Container(
+                width: calendarAppointmentDetails.bounds.width,
+                height: calendarAppointmentDetails.bounds.height / 2,
+                color: appointment.color,
+                child: Center(
+                  child: Icon(
+                    Icons.group,
+                    color: _colorCollection[Random().nextInt(9)],
+                  ),
+                )),
+          ],
+        ),
+      ),
     );
   }
 }

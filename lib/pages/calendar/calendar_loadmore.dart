@@ -56,14 +56,11 @@ class _LoadMoreCalendarState extends SampleViewState {
 
   @override
   Widget build(BuildContext context) {
-    final Widget calendar = Theme(
+    final Widget calendar = Container(
 
         /// The key set here to maintain the state,
         ///  when we change the parent of the widget
         key: _globalKey,
-        data: model.themeData.copyWith(
-            colorScheme: model.themeData.colorScheme
-                .copyWith(secondary: model.backgroundColor)),
         child: _getLoadMoreCalendar(_calendarController, _onViewChanged,
             _events, _scheduleViewBuilder));
 
@@ -141,6 +138,7 @@ class _LoadMoreCalendarState extends SampleViewState {
     colorCollection.add(const Color(0xFF636363));
     colorCollection.add(const Color(0xFF0A8043));
 
+    //randomly distribute appointments
     final Random random = Random();
     _dataCollection = <DateTime, List<_Meeting>>{};
     final DateTime today = DateTime.now();
@@ -161,7 +159,7 @@ class _LoadMoreCalendarState extends SampleViewState {
             subjectCollection[random.nextInt(7)],
             startDate,
             startDate.add(Duration(hours: duration == 0 ? 1 : duration)),
-            colorCollection[random.nextInt(9)],
+            Colors.grey,
             false);
 
         if (_dataCollection.containsKey(date)) {
@@ -203,8 +201,8 @@ class _LoadMoreCalendarState extends SampleViewState {
                   width: double.infinity,
                   alignment: Alignment.center,
                   child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color?>(
-                          model.backgroundColor)));
+                      valueColor:
+                          AlwaysStoppedAnimation<Color?>(Colors.amberAccent)));
             },
           );
         },
@@ -224,7 +222,7 @@ String _getMonthDate(int month) {
   } else if (month == 03) {
     return 'March';
   } else if (month == 04) {
-    return 'April';
+    return 'kev';
   } else if (month == 05) {
     return 'May';
   } else if (month == 06) {
@@ -251,7 +249,7 @@ Widget _scheduleViewBuilder(
   return Stack(
     children: <Widget>[
       Image(
-          image: ExactAssetImage('images/' + monthName + '.png'),
+          image: ExactAssetImage('images/$monthName.png'),
           fit: BoxFit.cover,
           width: details.bounds.width,
           height: details.bounds.height),
@@ -261,7 +259,7 @@ Widget _scheduleViewBuilder(
         top: 20,
         bottom: 0,
         child: Text(
-          monthName + ' ' + details.date.year.toString(),
+          '$monthName ${details.date.year}',
           style: const TextStyle(fontSize: 18),
         ),
       )
