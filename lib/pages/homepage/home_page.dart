@@ -38,13 +38,15 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          body: const TabBarView(
-            children: [
-              GettingStartedCalendar(ValueKey('key0')),
-              DragAndDropCalendar(ValueKey('key1')),
-              ShiftScheduler(ValueKey('key2')),
-              LoadMoreCalendar(ValueKey('key3')),
-            ],
+          body: SizedBox(
+            child: const TabBarView(
+              children: [
+                GettingStartedCalendar(ValueKey('key0')),
+                DragAndDropCalendar(ValueKey('key1')),
+                ShiftScheduler(ValueKey('key2')),
+                LoadMoreCalendar(ValueKey('key3')),
+              ],
+            ),
           ),
         ),
       ),

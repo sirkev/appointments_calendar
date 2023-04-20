@@ -32,6 +32,7 @@ class _ShiftSchedulerState extends SampleViewState {
   final List<String> _userImages = <String>[];
   final List<String> _colorNames = <String>[];
   final List<String> _timeZoneCollection = <String>[];
+  bool _onTapped = false;
 
   final CalendarController _calendarController = CalendarController();
 
@@ -521,6 +522,9 @@ class _ShiftSchedulerState extends SampleViewState {
       dynamic viewChangedCallback]) {
     return SfCalendar(
       appointmentBuilder: appointmentBuilder,
+      //  resourceViewHeaderBuilder: resourceViewHeaderBuilder,
+      allowAppointmentResize: true,
+      cellEndPadding: -1,
       viewHeaderStyle: ViewHeaderStyle(
           backgroundColor: Colors.grey.withOpacity(0.2),
           dayTextStyle: const TextStyle(
@@ -537,8 +541,8 @@ class _ShiftSchedulerState extends SampleViewState {
       // onTap: calendarTapCallback,
       timeSlotViewSettings: const TimeSlotViewSettings(
           timeInterval: Duration(hours: 1),
-          timeIntervalHeight: 70,
-          timeIntervalWidth: 120,
+          timeIntervalHeight: 300,
+          timeIntervalWidth: 150,
           minimumAppointmentDuration: Duration(hours: 1),
           startHour: 9,
           endHour: 18,
@@ -551,44 +555,187 @@ class _ShiftSchedulerState extends SampleViewState {
   }
 
   //custom appointment card
-  Widget appointmentBuilder(BuildContext context,
-      CalendarAppointmentDetails calendarAppointmentDetails) {
+  Widget appointmentBuilder(
+    BuildContext context,
+    CalendarAppointmentDetails calendarAppointmentDetails,
+  ) {
     final Appointment appointment =
         calendarAppointmentDetails.appointments.first;
-    return SingleChildScrollView(
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border(
-              top: BorderSide(
-                  color: _colorCollection[Random().nextInt(9)], width: 3)),
-          color: _colorCollection[Random().nextInt(9)],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: calendarAppointmentDetails.bounds.width,
-              height: calendarAppointmentDetails.bounds.height / 2,
-              color: appointment.color,
-              child: Text(
-                '${DateFormat('hh:mm a').format(appointment.startTime)}-${DateFormat('hh:mm a').format(appointment.endTime)}\n${appointment.subject}',
-                textAlign: TextAlign.start,
-                style: const TextStyle(fontSize: 10),
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _onTapped = !_onTapped;
+        });
+      },
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            height: 300,
+            decoration: BoxDecoration(
+              border:
+                  Border(top: BorderSide(color: _colorCollection[7], width: 3)),
+              color: Colors.grey[200],
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: calendarAppointmentDetails.bounds.width,
+                    height: 300,
+                    padding: const EdgeInsets.all(5),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: calendarAppointmentDetails.bounds.width,
+                          height: calendarAppointmentDetails.bounds.height / 2,
+                          //color: appointment.color,
+                          child: Text(
+                            '${DateFormat('hh:mm a').format(appointment.startTime)}-${DateFormat('hh:mm a').format(appointment.endTime)}\n${appointment.subject}',
+                            textAlign: TextAlign.start,
+                            style: const TextStyle(fontSize: 10),
+                          ),
+                        ),
+                        Container(
+                            width: calendarAppointmentDetails.bounds.width,
+                            height:
+                                calendarAppointmentDetails.bounds.height / 2,
+                            //color: appointment.color,
+                            child: Center(
+                              child: Icon(
+                                Icons.group,
+                                color: _colorCollection[1],
+                              ),
+                            )),
+                      ],
+                    ),
+                  )
+                ],
               ),
             ),
-            Container(
-                width: calendarAppointmentDetails.bounds.width,
-                height: calendarAppointmentDetails.bounds.height / 2,
-                color: appointment.color,
-                child: Center(
-                  child: Icon(
-                    Icons.group,
-                    color: _colorCollection[Random().nextInt(9)],
+          ),
+          _onTapped
+              ? Positioned(
+                  right: -calendarAppointmentDetails.bounds.width - 3,
+                  top: calendarAppointmentDetails.bounds.width / 8,
+                  child: Container(
+                    height: 80,
+                    width: 150,
+                    decoration: BoxDecoration(
+                      color: Color(0xff7091ac),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                backgroundImage:
+                                    AssetImage('${_userImages[1]}'),
+                                radius: 13,
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${_nameCollection[2]}',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  const Text(
+                                    'Process',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 10),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                          const Divider(
+                            color: Colors.white,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: const [
+                                  Text(
+                                    '3:45 - 04:30',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 10),
+                                  ),
+                                  Text(
+                                    'Messi Hair Style',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 10),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: const [
+                                  Text(
+                                    'Edit Apt',
+                                    style: TextStyle(
+                                        color: Colors.amber,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                  Text(
+                                    "\$55",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
                   ),
-                )),
-          ],
-        ),
+                )
+              : Container(),
+          _onTapped
+              ? Positioned(
+                  right: -6,
+                  top: calendarAppointmentDetails.bounds.width / 4,
+                  child: RotatedBox(
+                    quarterTurns: 3,
+                    child: Container(
+                      height: 10,
+                      width: 10,
+                      decoration: const BoxDecoration(
+                        color: Color(0xff7091ac),
+                      ),
+                    ),
+                  ),
+                )
+              : Container(),
+        ],
+      ),
+    );
+  }
+
+  Widget resourceViewHeaderBuilder(BuildContext context,
+      ResourceViewHeaderDetails resourceViewHeaderDetails) {
+    return Container(
+      color: Colors.grey.withOpacity(0.2),
+      child: Text(
+        resourceViewHeaderDetails.resource.displayName,
+        style: const TextStyle(
+            color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500),
       ),
     );
   }
