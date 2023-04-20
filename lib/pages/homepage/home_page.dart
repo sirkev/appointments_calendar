@@ -20,8 +20,8 @@ class _HomePageState extends State<HomePage> {
         length: 4,
         child: Scaffold(
           appBar: AppBar(
-            title: Text('calendar widget'),
-            bottom: TabBar(
+            title: const Text('calendar widget'),
+            bottom: const TabBar(
               tabs: [
                 Tab(
                   text: 'Appointments',
@@ -38,12 +38,12 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          body: TabBarView(
+          body: const TabBarView(
             children: [
-              GettingStartedCalendar(const ValueKey('key0')),
-              DragAndDropCalendar(const ValueKey('key1')),
-              ShiftScheduler(const ValueKey('key2')),
-              LoadMoreCalendar(const ValueKey('key3')),
+              GettingStartedCalendar(ValueKey('key0')),
+              DragAndDropCalendar(ValueKey('key1')),
+              ShiftScheduler(ValueKey('key2')),
+              LoadMoreCalendar(ValueKey('key3')),
             ],
           ),
         ),
